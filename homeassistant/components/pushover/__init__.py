@@ -115,7 +115,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: PushoverConfigEntry) -> 
             Platform.NOTIFY,
             DOMAIN,
             {
-                CONF_NAME: entry.data[CONF_NAME],
+                CONF_NAME: entry.data.get(CONF_NAME, entry.title),
                 CONF_USER_KEY: entry.data[CONF_USER_KEY],
                 "entry_id": entry.entry_id,
             },

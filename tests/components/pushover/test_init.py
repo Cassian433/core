@@ -9,6 +9,7 @@ from urllib3.exceptions import MaxRetryError
 
 from homeassistant.components.pushover.const import DOMAIN
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant
 
 from . import MOCK_CONFIG
@@ -37,6 +38,28 @@ async def test_async_setup_entry_success(
     await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
     assert entry.state is ConfigEntryState.LOADED
+
+
+@pytest.mark.usefixtures("mock_pushover")
+@pytest.mark.parametrize(
+    ("data", "service"),
+    [
+        pytest.param(MOCK_CONFIG, "pushover_work", id="entry_title"),
+        pytest.param(
+            {**MOCK_CONFIG, CONF_NAME: "Legacy name"}, "legacy_name", id="stored_name"
+        ),
+    ],
+)
+async def test_notify_service_name(
+    hass: HomeAssistant, data: dict[str, str], service: str
+) -> None:
+    """Test the notify service is named after a stored name or the entry title."""
+    entry = MockConfigEntry(domain=DOMAIN, title="Pushover Work", data=data)
+    entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert hass.services.has_service("notify", service)
 
 
 async def test_unique_id_updated(hass: HomeAssistant, mock_pushover: MagicMock) -> None:

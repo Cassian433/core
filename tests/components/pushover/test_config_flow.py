@@ -70,31 +70,6 @@ async def test_flow_user_key_api_key_exists(hass: HomeAssistant) -> None:
     assert result["reason"] == "already_configured"
 
 
-async def test_flow_name_already_configured(hass: HomeAssistant) -> None:
-    """Test user initialized flow with duplicate server."""
-    entry = MockConfigEntry(
-        domain=DOMAIN,
-        data=MOCK_CONFIG,
-        unique_id="MYUSERKEY",
-    )
-
-    entry.add_to_hass(hass)
-
-    new_config = MOCK_CONFIG.copy()
-    new_config[CONF_USER_KEY] = "NEUSERWKEY"
-
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN,
-        context={"source": config_entries.SOURCE_USER},
-    )
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        user_input=new_config,
-    )
-    assert result["type"] is FlowResultType.ABORT
-    assert result["reason"] == "already_configured"
-
-
 async def test_flow_invalid_user_key(
     hass: HomeAssistant, mock_pushover: MagicMock
 ) -> None:

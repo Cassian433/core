@@ -62,6 +62,7 @@ async def test_send_message(
     """Test sending a message."""
     entry = MockConfigEntry(
         domain=DOMAIN,
+        title="Pushover",
         data=MOCK_CONFIG,
     )
     entry.add_to_hass(hass)
@@ -110,7 +111,7 @@ async def test_send_message_attachment_error(
     translation_key: str,
 ) -> None:
     """Test that an unusable attachment raises and sends nothing."""
-    entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG)
+    entry = MockConfigEntry(domain=DOMAIN, title="Pushover", data=MOCK_CONFIG)
     entry.add_to_hass(hass)
 
     await hass.config_entries.async_setup(entry.entry_id)
@@ -145,7 +146,7 @@ async def test_send_message_with_attachment(
     attachment = tmp_path / "attachment.jpg"
     attachment.write_bytes(b"image data")
 
-    entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG)
+    entry = MockConfigEntry(domain=DOMAIN, title="Pushover", data=MOCK_CONFIG)
     entry.add_to_hass(hass)
 
     await hass.config_entries.async_setup(entry.entry_id)
@@ -174,7 +175,7 @@ async def test_cancel_by_tag(
     mock_cancel_receipt: MagicMock,
 ) -> None:
     """Test cancelling an emergency message by tag."""
-    entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG)
+    entry = MockConfigEntry(domain=DOMAIN, title="Pushover", data=MOCK_CONFIG)
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
@@ -207,7 +208,7 @@ async def test_cancel_all(
     mock_cancel_receipt: MagicMock,
 ) -> None:
     """Test cancelling all emergency messages when no tag is supplied."""
-    entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG)
+    entry = MockConfigEntry(domain=DOMAIN, title="Pushover", data=MOCK_CONFIG)
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
@@ -236,7 +237,7 @@ async def test_cancel_multiple_receipts_same_tag(
     mock_cancel_receipt: MagicMock,
 ) -> None:
     """Test that multiple emergency messages with the same tag are all cancelled."""
-    entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG)
+    entry = MockConfigEntry(domain=DOMAIN, title="Pushover", data=MOCK_CONFIG)
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
@@ -281,7 +282,7 @@ async def test_cancel_unknown_entry_id(
     mock_pushover: MagicMock,
 ) -> None:
     """Test cancel with an entry_id that does not exist."""
-    entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG)
+    entry = MockConfigEntry(domain=DOMAIN, title="Pushover", data=MOCK_CONFIG)
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
@@ -299,7 +300,7 @@ async def test_cancel_empty_receipt_tags(
     mock_cancel_receipt: MagicMock,
 ) -> None:
     """Test cancel when no receipts have been stored."""
-    entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG)
+    entry = MockConfigEntry(domain=DOMAIN, title="Pushover", data=MOCK_CONFIG)
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
@@ -321,7 +322,7 @@ async def test_cancel_tag_not_found(
     mock_cancel_receipt: MagicMock,
 ) -> None:
     """Test cancel when no receipts match the given tag."""
-    entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG)
+    entry = MockConfigEntry(domain=DOMAIN, title="Pushover", data=MOCK_CONFIG)
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()
@@ -353,7 +354,7 @@ async def test_cancel_receipt_api_error(
     mock_cancel_receipt: MagicMock,
 ) -> None:
     """Test that a BadAPIRequestError during cancel is logged and does not raise."""
-    entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG)
+    entry = MockConfigEntry(domain=DOMAIN, title="Pushover", data=MOCK_CONFIG)
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()

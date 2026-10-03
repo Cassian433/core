@@ -7,16 +7,13 @@ import probatio
 from pushover_complete import BadAPIRequestError, PushoverAPI
 
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_API_KEY, CONF_NAME
+from homeassistant.const import CONF_API_KEY
 from homeassistant.core import HomeAssistant
 
 from .const import CONF_USER_KEY, DEFAULT_NAME, DOMAIN
 
 USER_SCHEMA = probatio.Schema(
     {
-        # Name field is no longer allowed in config flow schemas
-        # pylint: disable-next=home-assistant-config-flow-name-field
-        probatio.Optional(CONF_NAME, default=DEFAULT_NAME): str,
         probatio.Required(probatio.Secret(CONF_API_KEY)): str,
         probatio.Required(CONF_USER_KEY): str,
     }
@@ -98,12 +95,11 @@ class PushBulletConfigFlow(ConfigFlow, domain=DOMAIN):
                     CONF_API_KEY: user_input[CONF_API_KEY],
                 }
             )
-            self._async_abort_entries_match({CONF_NAME: user_input[CONF_NAME]})
 
             errors = await validate_input(self.hass, user_input)
             if not errors:
                 return self.async_create_entry(
-                    title=user_input[CONF_NAME],
+                    title=DEFAULT_NAME,
                     data=user_input,
                 )
 
